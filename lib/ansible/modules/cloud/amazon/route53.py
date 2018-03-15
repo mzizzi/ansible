@@ -533,6 +533,7 @@ def main():
         decoded_name = decoded_name.replace(r'\100', '@')
         # Need to save this changes in rset, because of comparing rset.to_xml() == wanted_rset.to_xml() in next block
         rset.name = decoded_name
+        rset.resource_records = sorted(rset.resource_records)
 
         if identifier_in is not None:
             identifier_in = str(identifier_in)
@@ -543,8 +544,8 @@ def main():
             record['type'] = rset.type
             record['record'] = decoded_name
             record['ttl'] = rset.ttl
-            record['value'] = ','.join(sorted(rset.resource_records))
-            record['values'] = sorted(rset.resource_records)
+            record['value'] = ','.join(rset.resource_records)
+            record['values'] = rset.resource_records
             if hosted_zone_id_in:
                 record['hosted_zone_id'] = hosted_zone_id_in
             record['identifier'] = rset.identifier
@@ -562,8 +563,8 @@ def main():
                 record['alias_evaluate_target_health'] = rset.alias_evaluate_target_health
             else:
                 record['alias'] = False
-                record['value'] = ','.join(sorted(rset.resource_records))
-                record['values'] = sorted(rset.resource_records)
+                record['value'] = ','.join(rset.resource_records)
+                record['values'] = rset.resource_records
             if command_in == 'create' and rset.to_xml() == wanted_rset.to_xml():
                 module.exit_json(changed=False)
 
